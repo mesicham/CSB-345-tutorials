@@ -53,15 +53,15 @@ fish_counts <- fish %>% count(hour, state, genotype)
 #plot total counts
 #ggplot(fish_counts, aes(x = hour, y = n, color = genotype)) + geom_point() + geom_line() + facet_wrap(~state)
 
-fish_totals <- fish %>% count(hour, genotype)
+fish_totals <- fish_df %>% count(hour, genotype)
 fish_totals <- cbind(fish_totals, rep(row.names(fish_totals), each = 2))
 fish_counts <- fish_counts %>% arrange(state)
 fish_counts$totals <- fish_totals$n
 fish_counts$proportions <- fish_counts$n/fish_counts$totals
 
 #plot proportions
-august_plot <- ggplot(fish_counts, aes(x = hour, y = proportions, color = genotype)) + geom_point() + geom_line() + facet_wrap(~state)
-august_plot
+proportion_plot <- ggplot(fish_counts, aes(x = hour, y = proportions, color = genotype)) + geom_point() + geom_line() + facet_wrap(~state)
+proportion_plot
 
 #for each individual (trackID) what is the amount of time spent in each state (wake or sleep)
 #since each row is the call made off 6 seconds of observations we can use the number of rows as a measure of time (x6sec)
