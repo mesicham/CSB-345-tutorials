@@ -1,0 +1,68 @@
+---
+title: "Tutorial_1.R"
+author: "Amelia Mesich"
+date: "2025-08-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Welcome to R!
+
+R is the programming language we will use for the next few weeks of tutorials.
+
+R allows you to set the value of variables and perform functions with them
+
+```{r introduction}
+2+2
+a = 2 + 3
+x = 4
+y = 7
+x + y
+```
+
+## Classes of objects
+
+There are various types of data recognized by R. These including numerics, characters, lists and more.
+
+```{r object classes}
+class(2)
+class("hello")
+class(list("I", "love", "sleep"))
+class(list(2,5,3,9,1))
+
+```
+
+We will mostly be working with dataframes. These consist of rows and columns of data.
+
+```{R dataframe}
+data.frame(numbers = c("A", "B", "C", "D"), integers = c(1,2,3,4))
+
+```
+
+##R has lots of other built in functions
+
+```{r functions}
+print("Hello world")
+max(2,5,3,9,1)
+min(2,5,3,9,1)
+
+```
+
+##R can be used to analyze and visualize data
+
+```{r plotting, echo=TRUE}
+plot(x = c(1,2,3,4), y = c(5, 10, 2, 5), type = "b")
+```
+
+#See you next week!
+
+```{r fish plot, echo=TRUE}
+example_x <- c(1,1,2,4,5,6,7,8,8,7,6,5.5,5,4,4,4,2,1)
+example_y <- c(4,12,9,12,12,12,12,10,7,5,5,5,1,5,5,5,7,4)
+plot(x = example_x, y = example_y, type = "l", col = "blue", lwd = 4)
+symbols(6.5,9, circles = 0.1, add = TRUE, bg = "red", lwd = 4, inches = 0.3)
+symbols(6.5,9, circles = 0.1, add = TRUE, bg = "black", lwd = 4, inches = 0.1)
+```

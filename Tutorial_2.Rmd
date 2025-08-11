@@ -1,0 +1,80 @@
+---
+title: "Tutorial_2.Rmd"
+author: "Amelia Mesich"
+date: "2025-08-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Packages we will use
+Packages contain useful scripts written by other people
+
+```{r packages}
+library(lubridate)
+library(here)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+#install.packages("plotrix")
+library(plotrix)
+library(scales)
+```
+
+## Loading in the dataset
+
+We will load in the data from the paper into a variable called fish_df.
+This is a subset of the total data and contains all the observations from the month of August.
+
+```{r dataset}
+fish_df <- read.csv(here("zebrafish_behaviour_subset.csv"))
+#examine how the data is structured
+str(fish_df)
+```
+```{r dataset}
+#look at the first 6 rows
+head(fish_df)
+#open the full dataframe in a new tab
+View(fish_df)
+```
+
+convert the time column to a date-time object using the function as_datetime() from lubridate
+we can also use the day(), hour() and minute() functions to extract the day, hour and minute from the time
+```{r convert times}
+fish_df$time <- as_datetime(fish_df$time)
+fish_df$day <- day(fish_df$time)
+fish_df$hour <- hour(fish_df$time)
+fish_df$minute <- minute(fish_df$time)
+```
+
+For the first plot, we will filter for just the wildtype (WT) data
+This subsets the dataframe from 869,486 to 263,682 
+```{r convert times}
+fish_WT <- filter(fish_df, genotype == "WT")
+```
+
+#Plotting the timecourse
+
+```{r timecourse}
+#plot the raw observations (264k observations, resolution = 6sec)
+ggplot(fish_WT, aes(x = time, y = Dist_6s)) + geom_line()
+#plot all observations (264k), rounded to the nearest hour
+ggplot(fish_WT, aes(x = round_date(time, unit = "hour"), y = Dist_6s)) + geom_line() 
+```
+```{r timecourse}
+#plot all observations, rounded to the nearest hour for one day
+fish_WT %>% filter(day == 11) %>% ggplot(., aes(x = time, y = Dist_6s)) + geom_line() + scale_x_time(breaks=date_breaks("6 hours"))
+
+```
+
+#compare this to the timecourse figure from the paper
+
+![figure 1b.](zebrafish_figure_1b.png)
+
+
+```{r}
+
+```
+

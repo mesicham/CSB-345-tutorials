@@ -3,7 +3,6 @@ library(here)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
-library(gridExtra)
 install.packages("plotrix")
 library(plotrix)
 
@@ -15,7 +14,7 @@ fish <- fish %>% filter(month(time) == 8)
 table(fish$genotype, fish$experiment)
 fish <- subset(fish, select = -c(experiment, unique_trackID))
 
-write.csv(fish, here("zebrafish_behaviour_subset.csv"))
+write.csv(fish, here("zebrafish_behaviour_subset.csv"), row.names = FALSE)
 
 
 # Section 1: Timecourse plots ---------------------------------------------
@@ -28,6 +27,9 @@ tail(fish_df)
 str(fish_df)
 #convert time to a date-time object using the function as_datetime from lubridate
 fish_df$time <- as_datetime(fish_df$time)
+fish_df$day <- day(fish_df$time)
+fish_df$hour <- hour(fish_df$time)
+fish_df$minute <- minute(fish_df$time)
 
 #plot the raw observations (870,000 observations, resolution = 6sec)
 ggplot(fish_df, aes(x = time, y = Dist_6s)) + geom_line()
@@ -41,11 +43,6 @@ fish_plot
 
 
 # Section 2: Attempt at proportion plots ---------------------------
-fish_df <- read.csv(here("zebrafish_behaviour_subset.csv"))
-fish_df$day <- day(fish_df$time)
-fish_df$hour <- hour(fish_df$time)
-fish_df$minute <- minute(fish_df$time)
-
 fish_WT <- fish %>% filter(genotype == "WT")
 
 fish_counts <- fish %>% count(hour, state, genotype)

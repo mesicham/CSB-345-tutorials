@@ -23,9 +23,8 @@ df <- data.frame(numbers = c("A", "B", "C", "D"), integers = c(1,2,3,4))
 plot(x = c(1,2,3,4), y = c(5, 10, 2, 5))
 
 #plotting
-example_x <- c(1,1,2,4,5,6,7,8,8,7,6,5.5,5, 4,4,4,2,1)
-example_y <- c(4,12,9,12,12,12,12,10,7,5,5,5, 1, 5,5,5,7,4)
-plot(x = example_x, y = example_y, type = "b", col = "blue", lwd = 4)
+example_x <- c(1,1,2,4,5,6,7,8,8,7,6,5.5,5,4,4,4,2,1)
+example_y <- c(4,12,9,12,12,12,12,10,7,5,5,5,1,5,5,5,7,4)
 plot(x = example_x, y = example_y, type = "l", col = "blue", lwd = 4)
 symbols(6.5,9, circles = 0.1, add = TRUE, bg = "red", lwd = 4, inches = 0.3)
 symbols(6.5,9, circles = 0.1, add = TRUE, bg = "black", lwd = 4, inches = 0.1)
