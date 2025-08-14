@@ -3,7 +3,7 @@ library(here)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
-install.packages("plotrix")
+#install.packages("plotrix")
 library(plotrix)
 
 # Section 0: Save out subset zebrafish dataframe -delete this --------------------------
