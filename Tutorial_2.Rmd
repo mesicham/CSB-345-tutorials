@@ -42,7 +42,7 @@ str(fish_df)
 
 We can see that this is a dataframe that contains the 869486 observations or rows
 
-Each observation has a timepoint (time column), the unique individual being tracked (trackID column), the distance travelled in 6 seconds (column Dist_6s), the genotype of the individual (column genotype), if the observation occured at day or night (column daytime) and the sleep-wake state of the individual (column state)
+Each observation has a timepoint (time column), the unique individual being tracked (trackID column), the distance travelled in 6 seconds (Dist_6s column), the genotype of the individual (genotype column), if the observation occured at day or night (daytime column) and the sleep-wake state of the individual (state column)
 
 ```{r dataset}
 #look at the first 6 rows
@@ -51,9 +51,11 @@ head(fish_df)
 View(fish_df)
 ```
 
-Each observation has a timepoint under the time column, the unique individual being tracked under the trackID column, the distance travelled in 6 seconds (column Dist_6s), the genotype of the individual
+## Convert to a date-time format
 
-convert the time column to a date-time object using the function as_datetime() from lubridate we can also use the day(), hour() and minute() functions to extract the day, hour and minute from the time
+Convert the time column to a date-time object using the function as_datetime() from lubridate
+
+We can also use the day(), hour() and minute() functions to extract the day, hour and minute from the time
 
 ```{r convert times}
 fish_df$time <- as_datetime(fish_df$time)
@@ -62,13 +64,15 @@ fish_df$hour <- hour(fish_df$time)
 fish_df$minute <- minute(fish_df$time)
 ```
 
-For the first plot, we will filter for just the wildtype (WT) data This subsets the dataframe from 869,486 rows to 263,682 rows
+For the first plot, we will filter for just the wildtype (WT) data using the filter() function
+
+This subsets the dataframe from 869,486 rows to 263,682 rows
 
 ```{r convert times}
 fish_WT <- filter(fish_df, genotype == "WT")
 ```
 
-#Plotting the timecourse
+# Plotting the time series
 
 ```{r timecourse}
 #plot the raw observations (264k observations, resolution = 6sec)
