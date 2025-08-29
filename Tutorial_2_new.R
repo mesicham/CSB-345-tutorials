@@ -41,19 +41,20 @@ fish_plot <- fish_df %>% group_by(day, hour, genotype) %>% summarise(Dist_6s = m
 fish_plot <- fish_plot + annotate("rect", xmin = 0, xmax = 8.5, ymin = 0, ymax = Inf, fill = "slateblue", alpha = 0.5) + annotate("rect", xmin = 22.5, xmax = 24, ymin = 0, ymax = Inf, fill = "slateblue", alpha = 0.5)
 fish_plot
 
+ggplot(fish_df, aes(x = state, y = Dist_6s)) + geom_boxplot() + facet_wrap(~genotype)
+ggplot(fish_counts, aes(x = state, y = Dist_6s)) + geom_boxplot() + facet_wrap(~genotype)
 
 # Section 2: Attempt at proportion plots ---------------------------
-fish_WT <- fish %>% filter(genotype == "WT")
+#fish_WT <- fish %>% filter(genotype == "WT")
 
-fish_counts <- fish %>% count(hour, state, genotype)
+fish_counts <- fish_df %>% count(hour, state, genotype)
 
 #plot total counts
-#ggplot(fish_counts, aes(x = hour, y = n, color = genotype)) + geom_point() + geom_line() + facet_wrap(~state)
+ggplot(fish_counts, aes(x = hour, y = n, color = genotype)) + geom_point() + geom_line() + facet_wrap(~state)
 
-fish_totals <- fish_df %>% count(hour, genotype)
-fish_totals <- cbind(fish_totals, rep(row.names(fish_totals), each = 2))
-fish_counts <- fish_counts %>% arrange(state)
-fish_counts$totals <- fish_totals$n
+#new way to get totals
+fish_counts <- fish_counts %>% select(hour, state, genotype, n) %>% group_by(hour, genotype) %>% mutate(totals = sum(n))
+
 fish_counts$proportions <- fish_counts$n/fish_counts$totals
 
 #plot proportions
@@ -86,6 +87,8 @@ fish_2$SEM <- fish_2$SD/sqrt(fish_2$SD_n)
 fish_1 <- merge(fish_1, fish_2)
 ggplot(fish_1, aes(x = hour, y = mean_proportion)) + geom_point() + geom_line() + geom_errorbar(aes(ymin = mean_proportion - SD, ymax = mean_proportion + SD)) + facet_wrap(~state)
 ggplot(fish_1, aes(x = hour, y = mean_proportion)) + geom_point() + geom_line() + geom_errorbar(aes(ymin = mean_proportion - SEM, ymax = mean_proportion + SEM)) + facet_wrap(~state)
+
+ggplot(fish_counts, aes(x = state, y = n)) + geom_jitter() + facet_wrap(~hour)
 
 #add the standard error of the mean (SEM) which is the standard deviation /N 
 
@@ -214,5 +217,28 @@ fish_6 <- merge(fish_4, fish_5)
 ggplot(fish_6, aes(x = hour, y = mean_proportion, colour = genotype)) + geom_point() + geom_line() + geom_errorbar(aes(ymin = mean_proportion - SEM, ymax = mean_proportion + SEM)) + facet_wrap(~state)
 
 # Section 4: Sleep in day vs night zebrafish ------------------------------
+
+fish_counts <- fish_df %>% count(hour, state, genotype, trackID)
+
+#to get the total number of observations group by hour and genotype and then sum together all the sleep and wake observations
+fish_counts <- fish_counts %>% select(hour, state, genotype, n, trackID) %>% group_by(hour, genotype, trackID) %>% mutate(totals = sum(n))
+
+#divide the number of sleep and wake observations by the total number of observations
+fish_counts$proportions <- fish_counts$n/fish_counts$totals
+
+#ggplot(fish_counts, aes(x = as.factor(hour), y = proportions, color = genotype)) + geom_boxplot() + facet_wrap(~state)
+
+#average across days and across trackID
+fish_counts <- fish_counts %>% select(hour, state, genotype, proportions, trackID) %>% group_by(state, hour, genotype) %>% mutate(mean_proportion = mean(proportions))
+
+#find the variance across individuals
+fish_counts <- fish_counts %>% select(hour, state, genotype, proportions, trackID, mean_proportion) %>% group_by(state, hour, genotype) %>% mutate(SD = sd(proportions))
+fish_counts <- fish_counts %>% select(hour, state, genotype, proportions, trackID, mean_proportion) %>% group_by(state, hour, genotype) %>% mutate(SEM = std.error(proportions))
+
+#plot the proportion of sleep and wake in each hour for each genotype
+proportion_plot <- ggplot(fish_counts, aes(x = hour, y = mean_proportion, color = genotype)) + geom_point() + geom_line() + facet_wrap(~state)
+proportion_plot
+
+ggplot(fish_counts, aes(x = hour, y = mean_proportion, color = genotype)) + geom_point() + geom_line() + geom_errorbar(aes(ymin = mean_proportion - SEM, ymax = mean_proportion + SEM)) + facet_wrap(~state)
 
 
