@@ -43,7 +43,7 @@ data.frame(numbers = c("A", "B", "C", "D"), integers = c(1,2,3,4))
 
 ```
 
-##R has lots of other built in functions
+## R has lots of other built in functions
 
 ```{r functions}
 print("Hello world")
@@ -52,13 +52,25 @@ min(2,5,3,9,1)
 
 ```
 
-##R can be used to analyze and visualize data
+## You can also install packages to get access to custom functions
+
+For example, the mutate function from the tidyr package allows you to create new dataframe columns by modifying existing columns. Here we create a new column by multiplying each value by 2
+
+```{r packages}
+install.packages("tidyr")
+library(tidyr)
+
+df <- data.frame(numbers = c("A", "B", "C", "D"), integers = c(1,2,3,4))
+mutate(df, mutated_integers = integers * 2)
+```
+
+## R can be used to analyze and visualize data
 
 ```{r plotting, echo=TRUE}
 plot(x = c(1,2,3,4), y = c(5, 10, 2, 5), type = "b")
 ```
 
-#See you next week!
+## See you next week!
 
 ```{r fish plot, echo=TRUE}
 example_x <- c(1,1,2,4,5,6,7,8,8,7,6,5.5,5,4,4,4,2,1)

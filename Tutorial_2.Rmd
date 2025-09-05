@@ -29,6 +29,8 @@ library(plotrix)
 #change the scales on a timecourse plot
 library(scales)
 library(forcats)
+
+library(tidyverse)
 ```
 
 ## Loading in the dataset
@@ -92,6 +94,11 @@ Compare this to the timecourse figure from the paper. Lights on occurs from 9:00
 
 ## Distance moved over time is used to make calls on if a fish is asleep or awake
 
+```{r}
+fish_df %>% filter(state == "Wake") %>% min(Dist_6s)
+```
+
+We can see this cutoff when we plot the raw data as well
 ```{r}
 fish_df %>% filter(trackID == "p0") %>% ggplot(., aes(x = time, y = Dist_6s, colour = state)) + geom_line() + geom_point()
 fish_df %>% filter(trackID == "p0", day == 10) %>% ggplot(., aes(y = Dist_6s, x = state)) + geom_boxplot()
