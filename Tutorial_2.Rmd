@@ -21,13 +21,14 @@ library(lubridate)
 #sets the working directory
 library(here)
 #various useful functions
-#library(tidyr)
+library(tidyr)
 library(dplyr)
 #used to calculate the SEM
 #install.packages("plotrix")
 library(plotrix)
 #change the scales on a timecourse plot
 library(scales)
+library(forcats)
 ```
 
 ## Loading in the dataset
@@ -76,20 +77,29 @@ fish_WT <- filter(fish_df, genotype == "WT")
 
 ```{r timecourse}
 #plot the raw observations (264k observations, resolution = 6sec)
-ggplot(fish_WT, aes(x = time, y = Dist_6s)) + geom_line()
+ggplot(fish_WT, aes(x = time, y = Dist_6s, colour = daytime)) + geom_line()
 #plot all observations (264k), rounded to the nearest hour
-ggplot(fish_WT, aes(x = round_date(time, unit = "hour"), y = Dist_6s)) + geom_line() 
+ggplot(fish_WT, aes(x = round_date(time, unit = "minute"), y = Dist_6s, colour = daytime)) + geom_line() 
 ```
 
 ```{r timecourse}
 #plot all observations, rounded to the nearest hour for one day
-fish_WT %>% filter(day == 11) %>% ggplot(., aes(x = time, y = Dist_6s)) + geom_line() + scale_x_time(breaks=date_breaks("6 hours"))
+fish_WT %>% filter(day == 10) %>% separate(., col = time, into = c("date", "time"), sep = " ") 
+fish_WT[is.na(fish_WT$time)]
+ggplot(., aes(x = time, y = Dist_6s, colour = daytime)) + geom_line() + scale_x_datetime(breaks=date_breaks("3 hours"))
 
 ```
 
-#compare this to the timecourse figure from the paper
+#Distance moved over time is used to make calls on if a fish is asleep or awake
 
-![figure 1b.](zebrafish_figure_1b.png)
+```{r}
+fish_df %>% filter(trackID == "p0") %>% ggplot(., aes(x = time, y = Dist_6s, colour = state)) + geom_line() + geom_point()
+fish_df %>% filter(trackID == "p0", day == 10) %>% ggplot(., aes(y = Dist_6s, x = state)) + geom_boxplot()
+```
+
+#compare this to the timecourse figure from the paper. Lights on occurs from 9:00:00 - 23:00:00 lights off occurs from 23:00:01 -8:59:59.
+
+![figure 1b.](zebrafish_figure_1_edited.png)
 
 Hypocretin knockout fish should have more daytime sleep than wild type
 
