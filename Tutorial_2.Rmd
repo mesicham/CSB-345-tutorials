@@ -77,37 +77,24 @@ fish_WT <- filter(fish_df, genotype == "WT")
 
 ```{r timecourse}
 #plot the raw observations (264k observations, resolution = 6sec)
-ggplot(fish_WT, aes(x = time, y = Dist_6s, colour = daytime)) + geom_line()
-#plot all observations (264k), rounded to the nearest hour
-ggplot(fish_WT, aes(x = round_date(time, unit = "minute"), y = Dist_6s, colour = daytime)) + geom_line() 
+ggplot(fish_WT, aes(x = time, y = Dist_6s)) + geom_line() 
 ```
 
 ```{r timecourse}
 #plot all observations, rounded to the nearest hour for one day
-fish_WT %>% filter(day == 10) %>% separate(., col = time, into = c("date", "time"), sep = " ") 
-fish_WT[is.na(fish_WT$time)]
-ggplot(., aes(x = time, y = Dist_6s, colour = daytime)) + geom_line() + scale_x_datetime(breaks=date_breaks("3 hours"))
+fish_WT %>% filter(day == 10) %>% ggplot(., aes(x = time, y = Dist_6s, colour = daytime)) + geom_line() + scale_x_datetime(breaks=date_breaks("6 hours")) 
 
 ```
 
-#Distance moved over time is used to make calls on if a fish is asleep or awake
+Compare this to the timecourse figure from the paper. Lights on occurs from 9:00:00 - 23:00:00 lights off occurs from 23:00:01 -8:59:59.
+
+![figure 1b.](zebrafish_figure_1_edited.png)
+
+## Distance moved over time is used to make calls on if a fish is asleep or awake
 
 ```{r}
 fish_df %>% filter(trackID == "p0") %>% ggplot(., aes(x = time, y = Dist_6s, colour = state)) + geom_line() + geom_point()
 fish_df %>% filter(trackID == "p0", day == 10) %>% ggplot(., aes(y = Dist_6s, x = state)) + geom_boxplot()
-```
-
-#compare this to the timecourse figure from the paper. Lights on occurs from 9:00:00 - 23:00:00 lights off occurs from 23:00:01 -8:59:59.
-
-![figure 1b.](zebrafish_figure_1_edited.png)
-
-Hypocretin knockout fish should have more daytime sleep than wild type
-
-```{r}
-ggplot(fish_counts, aes(x = state, y = n)) + geom_boxplot() + facet_wrap(~hour)
-
-ggplot(fish_counts, aes(x = state, y = n)) + geom_boxplot() + facet_wrap(~hour)
-
 ```
 
 Plot the comparison across all hours
@@ -123,6 +110,15 @@ fish_counts$proportions <- fish_counts$n/fish_counts$totals
 
 proportion_plot <- ggplot(fish_counts, aes(x = hour, y = proportions, color = genotype)) + geom_point() + geom_line() + facet_wrap(~state)
 proportion_plot
+
+```
+
+Compare to the results from the paper ![figure 1b.](zebrafish_figure_3_wake.png) ![figure 1b.](zebrafish_figure_3_sleep.png)
+
+Hypocretin knockout fish should have more daytime sleep than wild type.
+
+```{r}
+fish_counts %>% filter(hour %in% 9:23, genotype %in% c("WT", "Hom"))  %>% ggplot(., aes(x = state, y = n, color = genotype)) + geom_boxplot()
 
 ```
 
