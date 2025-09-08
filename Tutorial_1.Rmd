@@ -57,8 +57,8 @@ min(2,5,3,9,1)
 For example, the mutate function from the tidyr package allows you to create new dataframe columns by modifying existing columns. Here we create a new column by multiplying each value by 2
 
 ```{r packages}
-install.packages("tidyr")
-library(tidyr)
+install.packages("dplyr")
+library(dplyr)
 
 df <- data.frame(numbers = c("A", "B", "C", "D"), integers = c(1,2,3,4))
 mutate(df, mutated_integers = integers * 2)
