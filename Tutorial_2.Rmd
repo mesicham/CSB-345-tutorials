@@ -17,6 +17,7 @@ Packages are collections of useful functions, data and documentation written by 
 
 ```{r packages}
 # a collection of R packages including ggplot, lubridate, forcats, stringr, tidyr, dplyr
+<<<<<<< HEAD
 install.packages("tidyverse")
 library(tidyverse)
 #additional package that sets the working directory
@@ -27,6 +28,18 @@ install.packages("scales")
 library(scales)
 #additional package to calculate statistical significance
 install.packages("ggpubr")
+=======
+#install.packages("tidyverse")
+library(tidyverse)
+#additional package that sets the working directory
+#install.packages("here")
+library(here)
+#additional package to change the scales on a time series plot
+#install.packages("scales")
+library(scales)
+#additional package to calculate statistical significance
+#install.packages("ggpubr")
+>>>>>>> 89e9dc78d16d8ed1b3cdc960dc956b506b9398f0
 library(ggpubr)
 #we will use this to save out the results as a PDF
 #tinytex::install_tinytex()
