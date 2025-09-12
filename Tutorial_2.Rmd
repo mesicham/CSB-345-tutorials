@@ -30,7 +30,7 @@ install.packages("ggpubr")
 #install.packages("tidyverse")
 library(ggpubr)
 #we will use this to save out the results as a PDF
-#tinytex::install_tinytex()
+tinytex::install_tinytex()
 ```
 
 ##Section 1: Loading in the dataset
