@@ -17,11 +17,19 @@ Packages are collections of useful functions, data and documentation written by 
 
 ```{r packages}
 # a collection of R packages including ggplot, lubridate, forcats, stringr, tidyr, dplyr
+#install.packages("tidyverse")
 library(tidyverse)
 #additional package that sets the working directory
+#install.packages("here")
 library(here)
 #additional package to change the scales on a time series plot
+#install.packages("scales")
 library(scales)
+#additional package to calculate statistical significance
+#install.packages("ggpubr")
+library(ggpubr)
+#we will use this to save out the results as a PDF
+#tinytex::install_tinytex()
 ```
 
 ##Section 1: Loading in the dataset
@@ -123,44 +131,54 @@ In wildtype zebrafish sleep is consolidated.
 fish_WT %>% filter(day == 10, hour %in% 0:8) %>% ggplot(., aes(x = time, fill = state)) + geom_bar(position = "fill") + scale_fill_manual(values = c("slateblue4", "lightseagreen" )) + scale_x_datetime(breaks = date_breaks("2 hours"))+ theme(axis.text.x = element_text(angle = 90))   + ggtitle("Plot 6: Zebrafish sleep")
 ```
 
-## Section 6: Comparison of sleep cycles in hypocretin knockouts vs wild type
+## Section 6: Comparison of sleep cycles in hypocretin knockouts vs wildtype
 
-Plot the comparison across all hours
+We want to compare the proportion of time sleep awake and the proportion of time spent asleep in the wildtype individuals vs the hypocretin knockouts.
+
+To do this, we can use the count() function to count the number of observations for each state (wake vs sleep) in each hour (0-23) for each genotype (wildtype, homozygous KO, heterozygous KO). This create a new datafrom with a column called n which contains the counts for each group.
 
 ```{r Section 6.1}
 fish_counts <- fish_df %>% count(hour, state, genotype)
+head(fish_counts)
+```
 
-#to get the total number of observations group by hour and genotype and then sum together all the sleep and wake observations
+We now need to get the total number of sleep and wake observations in each genotype in each hour in order to later calculate the proportion of time spent in sleep and wake out of the total time observed. To do this we select the columns we need, then we group by only hour and genotype. This pools both the sleep and wake observations for each hour and each genotype. We can then sum together all the sleep and wake observations using mutate and the sum function. We then divide the number of sleep and wake observations by the total number of observations to get the proportions.
+
+```{r Section 6.2}
 fish_counts <- fish_counts %>% select(hour, state, genotype, n) %>% group_by(hour, genotype) %>% mutate(totals = sum(n))
-
-#divide the number of sleep and wake observations by the total number of observations
 fish_counts$proportions <- fish_counts$n/fish_counts$totals
+```
 
-proportion_plot <- ggplot(fish_counts, aes(x = hour, y = proportions, color = genotype)) + annotate("rect", xmin = 0, xmax = 9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + annotate("rect", xmin = 23, xmax = 24, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + geom_point() + geom_line() + facet_wrap(~state) + ggtitle("Plot 7: Sleep and wake proportions in wildtype vs knockouts")
+We can now plot the proportion of total time spent in sleep and wake for each genotype over 24 hours.
 
-proportion_plot  
+```{r Section 6.3}
+ggplot(fish_counts, aes(x = hour, y = proportions, color = genotype)) + annotate("rect", xmin = 0, xmax = 9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + annotate("rect", xmin = 23, xmax = 24, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + geom_point() + geom_line() + facet_wrap(~state) + ggtitle("Plot 7: Sleep and wake proportions in wildtype vs knockouts")
 
 ```
 
-![figure 1b.](zebrafish_figure_3_edited.png)
+The homozygous hypocretin knockouts have more daytime sleep than wild type, the same result as we see in the paper. ![figure 1b.](zebrafish_figure_3_edited.png)
 
-Hypocretin knockout fish should have more daytime sleep than wild type.
+We can summarize this result with boxplots and use a t test to determine if there is a statistically significant difference between the mean of each group.
 
-```{r Section 6.2}
-fish_counts %>% filter(hour %in% 9:23, genotype %in% c("WT", "Hom"))  %>% ggplot(., aes(x = state, y = n, color = genotype)) + geom_boxplot() + scale_colour_manual(values = c("#F8766D" , "#619CFF")) + ggtitle("Plot 8: Sleep and wake proportions in wildtype and knockouts during the day") 
+```{r Section 6.4}
+fish_counts %>% filter(hour %in% 9:23, genotype %in% c("WT", "Hom"))  %>% ggplot(., aes(x = state, y = n, color = genotype)) + geom_boxplot() + scale_colour_manual(values = c("#F8766D" , "#619CFF")) + stat_compare_means(method = "t.test") + ggtitle("Plot 8: Sleep and wake proportions in wildtype and knockouts during the day") 
 
 ```
 
 We only see this difference during the day and not during the night
 
-```{r Section 6.3}
-fish_counts %>% filter(hour %in% 0:8, genotype %in% c("WT", "Hom"))  %>% ggplot(., aes(x = state, y = n, color = genotype)) + geom_boxplot() + scale_colour_manual(values = c("#F8766D" , "#619CFF")) + ggtitle("Plot 9: Sleep and wake proportions in wildtype and knockouts during the night")
+```{r Section 6.5}
+fish_counts %>% filter(hour %in% 0:8, genotype %in% c("WT", "Hom"))  %>% ggplot(., aes(x = state, y = n, color = genotype)) + geom_boxplot() + scale_colour_manual(values = c("#F8766D" , "#619CFF")) + stat_compare_means(method = "t.test")  + ggtitle("Plot 9: Sleep and wake proportions in wildtype and knockouts during the night")
 ```
 
-```{r Section 6.4}
+When we look at the total counts (not the proportion) we can see the same result. There are more sleep observations in the daytime for the homozygous mutants compared to wildtype.
+
+```{r Section 6.6}
 ggplot(fish_df, aes(x = hour, fill = state)) + annotate("rect", xmin = 0, xmax = 9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + annotate("rect", xmin = 22.0, xmax = 23.9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + geom_histogram(colour = "black", bins = 25) + scale_fill_manual(values = c("slateblue4", "lightseagreen" )) + facet_wrap(~genotype) + ggtitle("Plot 10: Total wake vs sleep observations in day vs night by genotype")
 ```
 
-```{r Section 6.5}
+There is no obvious difference in sleep consolidation. Knockouts do not have more fragmented sleep compared to wildtype.
+
+```{r Section 6.7}
 fish_df %>% filter(day %in% c(10, 14, 19), hour %in% 0:8) %>% ggplot(., aes(x = time, fill = state)) + geom_bar(position = "fill") + scale_fill_manual(values = c("slateblue4", "lightseagreen" )) + scale_x_datetime(breaks = date_breaks("4 hours")) + facet_wrap(~genotype, ncol = 1, nrow = 3, scales = "free") + ggtitle("Plot 11: Zebrafish sleep is equally consolidated in wildtype as knockouts")
 ```
