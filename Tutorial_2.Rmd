@@ -41,8 +41,6 @@ Each observation has a timepoint (time column), the distance travelled in 6 seco
 ```{r Section 1.2}
 #look at the first 6 rows
 head(fish_df)
-#open the full dataframe in a new tab
-View(fish_df)
 ```
 
 ## Section 2: Convert format of date-time column
