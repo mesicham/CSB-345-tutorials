@@ -91,9 +91,9 @@ fish_WT %>% filter(day == 12) %>% ggplot(., aes(x = time, y = Dist_6s)) + geom_l
 
 ```
 
-We can compare this to the time series figure from the paper. We can see on both days there is more activity during the day and less at night. \*\*Lights on occurs from 9:00:00 - 23:00:00 lights off occurs from 23:00:01 -8:59:59.
+We can compare this to the time series figure from the paper. We can see on both days there is more activity during the day and less at night.
 
-![figure 1b.](zebrafish_figure_1_edited.png)
+![](zebrafish_figure_1_edited.png)
 
 ## Section 4: Determining sleep vs wake
 
@@ -142,12 +142,13 @@ We now need to get the total number of sleep and wake observations in each genot
 ```{r Section 6.2}
 fish_counts <- fish_counts %>% select(hour, state, genotype, n) %>% group_by(hour, genotype) %>% mutate(totals = sum(n))
 fish_counts$proportions <- fish_counts$n/fish_counts$totals
+head(fish_counts)
 ```
 
 We can now plot the proportion of total time spent in sleep and wake for each genotype over 24 hours.
 
 ```{r Section 6.3}
-ggplot(fish_counts, aes(x = hour, y = proportions, color = genotype)) + annotate("rect", xmin = 0, xmax = 9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + annotate("rect", xmin = 23, xmax = 24, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + geom_point() + geom_line() + facet_wrap(~state) + ggtitle("Plot 7: Sleep and wake proportions in wildtype vs knockouts")
+ggplot(fish_counts, aes(x = hour, y = proportions, color = genotype)) + annotate("rect", xmin = 0, xmax = 9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + annotate("rect", xmin = 23, xmax = 24, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + geom_point() + geom_line() + facet_wrap(~state) + ggtitle("Plot 6: Sleep and wake proportions in wildtype vs knockouts")
 
 ```
 
@@ -156,20 +157,18 @@ The homozygous hypocretin knockouts have more daytime sleep than wild type, the 
 We can summarize this result with boxplots and use a t test to determine if there is a statistically significant difference between the mean of each group.
 
 ```{r Section 6.4}
-fish_counts %>% filter(hour %in% 9:23, genotype %in% c("WT", "Hom"))  %>% ggplot(., aes(x = state, y = n, color = genotype)) + geom_boxplot() + scale_colour_manual(values = c("#F8766D" , "#619CFF")) + stat_compare_means(method = "t.test") + ggtitle("Plot 8: Sleep and wake proportions in wildtype and knockouts during the day") 
+fish_counts %>% filter(hour %in% 9:23, genotype %in% c("WT", "Hom"))  %>% ggplot(., aes(x = state, y = n, color = genotype)) + geom_boxplot() + scale_colour_manual(values = c("#F8766D" , "#619CFF")) + stat_compare_means(method = "t.test") + ggtitle("Plot 7: Sleep and wake proportions in wildtype and knockouts during the day") 
 
 ```
 
 We only see this difference during the day and not during the night
 
 ```{r Section 6.5}
-fish_counts %>% filter(hour %in% 0:8, genotype %in% c("WT", "Hom"))  %>% ggplot(., aes(x = state, y = n, color = genotype)) + geom_boxplot() + scale_colour_manual(values = c("#F8766D" , "#619CFF")) + stat_compare_means(method = "t.test")  + ggtitle("Plot 9: Sleep and wake proportions in wildtype and knockouts during the night")
+fish_counts %>% filter(hour %in% 0:8, genotype %in% c("WT", "Hom"))  %>% ggplot(., aes(x = state, y = n, color = genotype)) + geom_boxplot() + scale_colour_manual(values = c("#F8766D" , "#619CFF")) + stat_compare_means(method = "t.test")  + ggtitle("Plot 8: Sleep and wake proportions in wildtype and knockouts during the night")
 ```
 
 When we look at the total counts (not the proportion) we can see the same result. There are more sleep observations in the daytime for the homozygous mutants compared to wildtype.
 
 ```{r Section 6.6}
-ggplot(fish_df, aes(x = hour, fill = state)) + annotate("rect", xmin = 0, xmax = 9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + annotate("rect", xmin = 22.0, xmax = 23.9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + geom_histogram(colour = "black", bins = 25) + scale_fill_manual(values = c("slateblue4", "lightseagreen" )) + facet_wrap(~genotype) + ggtitle("Plot 10: Total wake vs sleep observations in day vs night by genotype")
+ggplot(fish_df, aes(x = hour, fill = state)) + annotate("rect", xmin = 0, xmax = 9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + annotate("rect", xmin = 22.0, xmax = 23.9, ymin = 0, ymax = Inf, fill = "grey", alpha = 0.6) + geom_histogram(colour = "black", bins = 25) + scale_fill_manual(values = c("slateblue4", "lightseagreen" )) + facet_wrap(~genotype) + ggtitle("Plot 9: Total wake vs sleep observations in day vs night by genotype")
 ```
-
-
