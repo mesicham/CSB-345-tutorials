@@ -132,6 +132,7 @@ It appears the cutoff they use is ___. We can see this cutoff when we plot the r
 speed_plot <- ggplot(fish_WT, aes(x = time, y = Dist_6s, colour = ___)) + geom_line()
 
 speed_plot <- speed_plot + scale_colour_manual(values = c("lightseagreen" , "navy"))
+
 speed_plot <- speed_plot + ggtitle("Plot 3: Zebrafish sleep vs wake speed over time") 
 
 speed_plot
