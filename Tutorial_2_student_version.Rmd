@@ -73,6 +73,8 @@ For the first plot, we will filter for just the wildtype (WT) data using the fil
 
 ```{r Section 2.2}
 fish_WT <- filter(fish_df, genotype == "WT")
+
+str(fish_WT)
 ```
 
 ## Section 3: Plotting the time series
