@@ -79,14 +79,14 @@ str(fish_WT)
 
 ## Section 3: Plotting the time series
 
-The function ggplot allows us to create a customizable data visualizations It requires the data to plot as the first variable, and the aesthetics to be used when making the plot (typically this is the x and y coordinates). You can then specify the type of plot you want to make with additional mapping layers. Here we use geom_line() but we will go through other examples of plots supported by ggplot.
+The function ggplot allows us to create a customizable data visualizations. It requires the data to plot as the first variable, and the aesthetics to be used when making the plot (typically this is the x and y coordinates). You can then specify the type of plot you want to make with additional mapping layers. Here we use geom_line() but we will go through other examples of plots supported by ggplot.
 
 ```{r Section 3.1}
 #plot the raw observations (264k observations) from fish_WT
 #set the x axis to be time and the y axis to be distance moved in 6s
 time_series_plot <- ggplot(data = fish_WT, mapping = aes(x = ___, y = Dist_6s)) + geom_line() 
 
-time_series_plot <- time_series_plot + ggtitle("Plot 1: Zerbafish time series over 4 days")
+time_series_plot <- time_series_plot + ggtitle("Plot 1: Zebrafish time series over 4 days")
 
 time_series_plot
 ```
