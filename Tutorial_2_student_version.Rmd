@@ -65,6 +65,8 @@ fish_df$day <- day(fish_df$time)
 fish_df$hour <- hour(fish_df$time)
 
 fish_df$minute <- minute(fish_df$time)
+
+head(fish_df)
 ```
 
 For the first plot, we will filter for just the wildtype (WT) data using the filter() function. We will call the subset dataframe fish_WT. This subsets the dataframe from 869,486 rows to 263,682 rows.
