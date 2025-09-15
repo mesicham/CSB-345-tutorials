@@ -173,7 +173,7 @@ total_counts_plot
 
 We want to compare the proportion of time sleep awake and the proportion of time spent asleep in the wildtype individuals vs the hypocretin knockouts.
 
-To do this, we can use the count() function to count the number of observations for each state (wake vs sleep) in each hour (0-23) for each genotype (wildtype, homozygous KO, heterozygous KO). This create a new datafrom with a column called n which contains the counts for each group.
+To do this, we can use the count() function to count the number of observations for each state (wake vs sleep) in each hour (0-23) for each genotype (wildtype, homozygous KO, heterozygous KO). This create a new dataframe with a column called n which contains the counts for each group.
 
 ```{r Section 6.1}
 fish_counts <- fish_df %>% count(hour, state, ___)
