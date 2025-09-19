@@ -3,8 +3,6 @@ title: "Tutorial_2_student_version"
 author: "Amelia Mesich"
 date: "2025-09-13"
 output: pdf_document
-
-
 ---
 
 ```{r setup, include=FALSE}
@@ -28,8 +26,6 @@ library(scales)
 #additional package to calculate statistical significance
 install.packages("ggpubr")
 library(ggpubr)
-#we will use this to save out the results as a PDF
-#tinytex::install_tinytex()
 ```
 
 ##Section 1: Loading in the dataset
@@ -101,7 +97,7 @@ single_day_plot <- single_day_plot + annotate("rect", xmin = as_datetime("2022-0
 
 single_day_plot <- single_day_plot + geom_line()
 
-single_day_plot <- single_day_plot + scale_x_datetime(breaks = date_breaks(___))
+single_day_plot <- single_day_plot + scale_x_datetime(breaks = date_breaks("___"))
 
 single_day_plot <- single_day_plot + theme(axis.text.x = element_text(angle = 90)) 
 
@@ -110,7 +106,7 @@ single_day_plot <- single_day_plot + ggtitle("Plot 2: Zebrafish time series data
 single_day_plot
 ```
 
-We can compare this to the time series figure from the paper. We can see on both days there is more activity during the ___ and less at ___.
+We can compare this to the time series figure from the paper. We can see on both days there is more activity during the \_\_\_ and less at \_\_\_.
 
 ![](zebrafish_figure_1_edited.png)
 
@@ -126,7 +122,7 @@ fish_sleep <- fish_df %>% filter(state == "Sleep")
 max(fish_sleep$Dist_6s)
 ```
 
-It appears the cutoff they use is ___. We can see this cutoff when we plot the raw data as well.
+It appears the cutoff they use is 0.2cm/s. We can see this cutoff when we plot the raw data as well.
 
 ```{r Section 4.2}
 speed_plot <- ggplot(fish_WT, aes(x = time, y = Dist_6s, colour = ___)) + geom_line()
@@ -248,6 +244,7 @@ daytime_boxplot <- daytime_boxplot + ggtitle("Plot 8: Sleep and wake observation
 daytime_boxplot
 
 ```
+
 Next we will plot the observations from the nighttime hours.
 
 ```{r Section 6.6}
@@ -263,5 +260,5 @@ nighttime_boxplot <- nighttime_boxplot + ggtitle("Plot 9: Sleep and wake observa
 
 nighttime_boxplot
 ```
-We can see there is a statistically significant effect only during the ___ and not the ___.
-The statistically significant effect is an ___ in sleep in the ___ genotype, p value = ___.
+
+We can see there is a statistically significant effect only during the \_\_\_ and not the ***. The statistically significant effect is an*** in sleep in the homozygous ***, p value =*** .

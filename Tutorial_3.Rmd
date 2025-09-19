@@ -1,0 +1,62 @@
+---
+title: "Tutorial_3"
+author: "Ayasha Abdalla-Wyse"
+date: "2025-09-16"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setting up
+
+We are exploring the hypothesis that Species A (Neobue) sleeps more than Species B (Lamsig), because it lives in a rockier habitat, so it is able to hide from predators more easily. First, we will have to load all of the required packages, and the data for today. It is saved as an R object, so after running this code you should see a dataframe in your environment called sleep_data.
+
+```{r setup}
+# These are all packages we've used before, so they should already be installed!
+# if not, just add a line: install.packages("package_name")
+library(ggplot2)
+library(ggpubr)
+library(dplyr)
+
+# Load the data for today's tutorial
+load("Tutorial3.RData")
+```
+
+Let's look at the data!
+
+```{r exploring the data}
+str(sleep_data)
+
+# Show the first 10 rows
+head(sleep_data, 10) 
+```
+
+## Testing our hypothesis
+
+In order to test our hypothesis, we need to clean up our data to focus only on the information we need. We will use the group_by and summarise functions to create a new dataframe called sleep_analysis.
+
+```{r analysis}
+sleep_analysis <- sleep_data %>% 
+  group_by(species, sample_id, habitat, state) %>%
+  summarise(total_hour = sum(total_hour)) %>%
+  filter(state == "sleep")
+
+head(sleep_analysis)
+```
+
+## Visualizing our data
+
+Now we have a dataframe containing only the variables we are testing for each individual, so we can make a boxplot using ggplot to compare the mean time spent asleep across species.
+
+```{r plotting}
+ggplot(sleep_analysis, aes(x = species, y = total_hour)) +
+  geom_boxplot() +
+  geom_point() +
+  stat_compare_means(method = "t.test", paired = FALSE, label="p") +
+  ggtitle("Differences in sleep between Lamsig and Neobue") +
+  labs(x = "Species", y = "Total sleep (h)")
+```
+
+This plot shows us that Lamsig sleeps significantly more than Neobue! This is the opposite of our hypothesis... any ideas why?
