@@ -17,6 +17,7 @@ We are exploring the hypothesis that Species A (Neobue) sleeps more than Species
 # These are all packages we've used before, so they should already be installed!
 # if not, just add a line: install.packages("package_name")
 library(ggplot2)
+install.packages("ggpubr")
 library(ggpubr)
 library(dplyr)
 
