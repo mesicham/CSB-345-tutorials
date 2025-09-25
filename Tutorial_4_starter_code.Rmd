@@ -1,0 +1,59 @@
+---
+title: "Tutorial_4_starter_code"
+author: "Ayasha Abdalla-Wyse"
+date: "2025-09-16"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setting up
+
+Time to test your hypothesis! First we'll load all the libraries required and the data with for all the species.
+
+```{r packages}
+# Load the libraries required for analysis and visualization
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+
+# Load the data patterns for all of the species 
+# This will appear in your environment as a dataframe called "all_species_sleep_data"
+load("Tutorial4.RData")
+```
+
+Filter the data for the species you've chosen to compare! Replace each text with the 6 letter species code corresponding to your species. Here, the | symbol is an "or" operator, which means we want to filter the data where the species name is X or Y. If you've chosen more species to look at, you can just add another or (|) to include it!
+
+```{r filter data}
+my_species <- filter(all_species_sleep_data, species == "______" | species == "______")
+
+```
+
+## Testing your hypothesis
+
+Here, you need to clean up your data to focus only on the information needed for your hypothesis, like we did in Tutorial 3. You can use the group_by and summarise functions to create a new dataframe called sleep_analysis. Helpful functions to summarise by include mean(variable) and sum(variable).
+
+```{r analysis}
+sleep_analysis <- sleep_data %>% 
+  group_by(species, sample_id, some_variable, ...) %>%
+  summarise(new_column = ____) 
+
+head(sleep_analysis)
+```
+
+## Visualizing your data
+
+Once you have a dataframe containing only the variables of interest, you can use ggplot to make all kinds of graphs. The outline code here is for a boxplot (which will be useful), but we encourage you to also explore other plots to include in your graphical abstract! You can re-use code from Tutorial 2, where we make line graphs, histograms and scatterplots. There is also useful code there to personalize the graphs, including annotations, changing colours, etc.
+
+```{r plotting}
+ggplot(sleep_analysis, aes(x = ____, y = ____)) +
+  geom_boxplot() +
+  geom_point() +
+  stat_compare_means(method = "t.test", paired = FALSE, label="p") +
+  ggtitle("TITLE") +
+  labs(x = "Label x", y = "Label y")
+```
+
+
