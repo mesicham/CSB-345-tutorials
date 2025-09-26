@@ -24,7 +24,7 @@ library(dplyr)
 load("Tutorial4.RData")
 ```
 
-Filter the data for the species you've chosen to compare! Replace each text with the 6 letter species code corresponding to your species. Here, the | symbol is an "or" operator, which means we want to filter the data where the species name is X or Y. If you've chosen more species to look at, you can just add another or (|) to include it!
+Filter the data for the species you've chosen to compare! Replace each text with the 6 letter species code corresponding to your species. Here, the \| symbol is an "or" operator, which means we want to filter the data where the species name is X or Y. If you've chosen more species to look at, you can just add another or (\|) to include it!
 
 ```{r filter data}
 my_species <- filter(all_species_sleep_data, species == "______" | species == "______")
@@ -36,7 +36,7 @@ my_species <- filter(all_species_sleep_data, species == "______" | species == "_
 Here, you need to clean up your data to focus only on the information needed for your hypothesis, like we did in Tutorial 3. You can use the group_by and summarise functions to create a new dataframe called sleep_analysis. Helpful functions to summarise by include mean(variable) and sum(variable).
 
 ```{r analysis}
-sleep_analysis <- sleep_data %>% 
+sleep_analysis <- my_species %>% 
   group_by(species, sample_id, some_variable, ...) %>%
   summarise(new_column = ____) 
 
@@ -55,5 +55,3 @@ ggplot(sleep_analysis, aes(x = ____, y = ____)) +
   ggtitle("TITLE") +
   labs(x = "Label x", y = "Label y")
 ```
-
-
