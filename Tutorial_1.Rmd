@@ -39,7 +39,7 @@ class(list(2,5,3,9,1))
 We will mostly be working with dataframes. These consist of rows and columns of data.
 
 ```{r dataframe}
-data.frame(numbers = c("A", "B", "C", "D"), integers = c(1,2,3,4))
+data.frame(letters = c("A", "B", "C", "D"), integers = c(1,2,3,4))
 
 ```
 
@@ -60,14 +60,17 @@ For example, the mutate function from the tidyr package allows you to create new
 install.packages("dplyr")
 library(dplyr)
 
-df <- data.frame(numbers = c("A", "B", "C", "D"), integers = c(1,2,3,4))
+df <- data.frame(letters = c("A", "B", "C", "D"), integers = c(1,2,3,4))
 mutate(df, mutated_integers = integers * 2)
 ```
 
 ## R can be used to analyze and visualize data
 
 ```{r plotting, echo=TRUE}
-plot(x = c(1,2,3,4), y = c(5, 10, 2, 5), type = "b")
+install.packages("ggplot2")
+library(ggplot2)
+ggplot(df, aes(x = letters, y = integers)) + 
+  geom_col()
 ```
 
 ## See you next week!
