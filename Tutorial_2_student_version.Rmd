@@ -320,7 +320,7 @@ First we will plot the observations from the daytime hours.
 daytime_boxplot <- fish_counts %>% 
   filter(hour %in% c(9:23), genotype %in% c("WT", "Hom")) %>% #filter for hour and genotype
   
-  ggplot(., aes(x = state, y = ____, color = genotype)) + #data and aesthetic mapping
+  ggplot(., aes(x = genotype, y = ____, color = genotype)) + #data and aesthetic mapping
   
   geom_boxplot() + #geom layer displays data as a boxplot
   
@@ -344,7 +344,7 @@ nighttime_boxplot <- fish_counts %>%
   
   filter(hour %in% _____, genotype %in% c("WT", "Hom")) %>% #filter for hour and genotype
   
-  ggplot(., aes(x = state, y = n, color = genotype)) + #data and aesthetic mapping
+  ggplot(., aes(x = genotype, y = n, color = genotype)) + #data and aesthetic mapping
 
   geom_boxplot() + #geom layer displays data as a boxplot
   
