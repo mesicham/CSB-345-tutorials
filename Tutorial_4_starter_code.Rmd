@@ -18,6 +18,7 @@ Time to test your hypothesis! First we'll load all the libraries required and th
 library(ggplot2)
 library(lubridate)
 library(dplyr)
+library(ggpubr)
 
 # Load the data patterns for all of the species 
 # This will appear in your environment as a dataframe called "all_species_sleep_data"
@@ -27,7 +28,7 @@ load("Tutorial4.RData")
 Filter the data for the species you've chosen to compare! Replace each text with the 6 letter species code corresponding to your species. Here, the \| symbol is an "or" operator, which means we want to filter the data where the species name is X or Y. If you've chosen more species to look at, you can just add another or (\|) to include it!
 
 ```{r filter data}
-my_species <- filter(all_species_sleep_data, species == "______" | species == "______")
+my_species <- filter(all_species_sleep_data, species %in% c("Enamel", "Cypcol"))
 
 ```
 
@@ -36,9 +37,10 @@ my_species <- filter(all_species_sleep_data, species == "______" | species == "_
 Here, you need to clean up your data to focus only on the information needed for your hypothesis, like we did in Tutorial 3. You can use the group_by and summarise functions to create a new dataframe called sleep_analysis. Helpful functions to summarise by include mean(variable) and sum(variable).
 
 ```{r analysis}
-sleep_analysis <- sleep_data %>% 
-  group_by(species, sample_id, some_variable, ...) %>%
-  summarise(new_column = ____) 
+sleep_analysis <- my_species %>% 
+  group_by(species, sample_id, state, habitat) %>%
+  summarise(total_sleep = sum(total_hour), mean_y_pos = mean(mean_y_pos)) %>%
+  filter(state == "sleep")
 
 head(sleep_analysis)
 ```
@@ -48,10 +50,40 @@ head(sleep_analysis)
 Once you have a dataframe containing only the variables of interest, you can use ggplot to make all kinds of graphs. The outline code here is for a boxplot (which will be useful), but we encourage you to also explore other plots to include in your graphical abstract! You can re-use code from Tutorial 2, where we make line graphs, histograms and scatterplots. There is also useful code there to personalize the graphs, including annotations, changing colours, etc.
 
 ```{r plotting}
-ggplot(sleep_analysis, aes(x = ____, y = ____)) +
+
+ggplot(sleep_analysis, aes(x = habitat, y = total_sleep)) +
   geom_boxplot() +
-  geom_point() +
-  stat_compare_means(method = "t.test", paired = FALSE, label="p") +
+  geom_point(position = position_dodge(0.75)) +
+  stat_compare_means(method = "t.test") +
   ggtitle("TITLE") +
-  labs(x = "Label x", y = "Label y")
+  labs(x = "Label x", y = "Label y") 
 ```
+
+This is an example of where you would need more than one plot. The hypothesis is relatively simple (essentially what we did in Tutorial 3), but it can be made more complicated by looking at another variable OR adding species.
+
+## Multiple variables
+
+We did not see any differences in total sleep based on habitat for these species, but what if we add a variable? Maybe they sleep at different times of day...
+
+```{r more plotting}
+
+# now, we are adding phase as a variable
+sleep_analysis <- my_species %>% 
+  group_by(species, sample_id, phase, state, habitat) %>%
+  summarise(total_sleep = sum(total_hour), mean_y_pos = mean(mean_y_pos)) %>%
+  filter(state == "sleep")
+
+ggplot(sleep_analysis,aes(x = species, y = total_sleep, fill = habitat)) +
+  geom_boxplot() +
+  geom_point(position = position_dodge(0.75)) +
+  stat_compare_means(method = "t.test") +
+  # if we facet by phase, we can see how sleep differs at different times
+  facet_wrap(~phase, nrow = 1) +
+  ggtitle("TITLE") +
+  labs(x = "Label x", y = "Label y") +
+  # setting different colours and themes
+  scale_fill_brewer(palette = "Blues") +
+  theme_classic() 
+```
+
+Now, we do see a significant difference, where Enamel, which lives in a sandy habitat, sleeps more during the day specifically! Here, we have a more nuanced hypothesis/result, so once graph is sufficient.
