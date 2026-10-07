@@ -192,3 +192,24 @@ ggplot(sleep_analysis, aes(x = species, y = mean_longest_bout)) +
   coord_cartesian(ylim =  c(0, 15000))
 
 ```
+
+```{r comparing two continouous variables}
+#calculate the R-squared value manually and add it with the annotation function
+m <- lm(mean_y_pos ~ longest_bout, data = all_species_sleep_data)
+
+ggplot(all_species_sleep_data, aes(y = longest_bout, x = mean_y_pos)) + 
+  geom_point() + 
+  theme_classic() + 
+  geom_smooth(method = "lm") +
+  annotate("text", x = 0.9, y = 45000, label = paste0("R-squared = ", round(summary(m)$r.squared, 3)))
+
+#use the ggmisc package to calculate the R-squared value automatically
+#install.packages("ggpmisc")
+library(ggpmisc)
+ggplot(all_species_sleep_data, aes(y = longest_bout, x = mean_y_pos)) + 
+  theme_classic() + 
+  stat_poly_line() +
+  stat_poly_eq() +
+  geom_point()
+
+```
