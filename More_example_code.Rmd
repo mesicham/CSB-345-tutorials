@@ -186,7 +186,8 @@ ggplot(sleep_analysis, aes(x = species, y = mean_longest_bout)) +
 #removing the outliers
 ggplot(sleep_analysis, aes(x = species, y = mean_longest_bout)) +
   geom_boxplot(outlier.shape = NA) +
-  stat_compare_means(method = "t.test", paired = FALSE, label="p") +
+  #adjust the y position so the p values still display on the plot
+  stat_compare_means(method = "t.test", paired = FALSE, label="p", label.x = 0.5, label.y = 14000) +
   ggtitle("TITLE") +
   labs(x = "Label x", y = "Label y") +
   coord_cartesian(ylim =  c(0, 15000))
